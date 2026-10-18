@@ -129,7 +129,16 @@ try {
 	assert.equal(await before({ systemPrompt: REAL_PI_PROMPT }, ctx), undefined, "关闭后不再注入");
 	assert.equal(statuses.at(-1)[1], undefined, "footer 清空");
 
-	console.log("OK — 破限切除 7 组断言全部通过");
+	// 8. BOM 容错：记事本 / PowerShell Set-Content 写出的带 BOM JSON 仍要能读
+	writeFileSync(CONFIG, `\uFEFF${JSON.stringify({ enabled: true, source: PERSONA, mode: "strict" })}`, "utf8");
+	const bomEvents = new Map();
+	const bomCommands = new Map();
+	const bomMod = await import(`${pathToFileURL(join(import.meta.dirname, "..", "extensions", "pi-purge.ts")).href}?bom=1`);
+	bomMod.default({ on: (name, handler) => bomEvents.set(name, handler), registerCommand: (name, options) => bomCommands.set(name, options) });
+	const bomOut = await bomEvents.get("before_agent_start")({ systemPrompt: REAL_PI_PROMPT }, ctx);
+	assert.ok(bomOut?.systemPrompt.startsWith("<|im_start|>"), "带 BOM 的状态文件也要能启用");
+
+	console.log("OK — 系统提示词 8 组断言全部通过");
 	console.log("宿主提示词:", REAL_PI_PROMPT.length, "字符 ->", sp.length, "字符（含人设）");
 } finally {
 	rmSync(AGENT_DIR, { recursive: true, force: true });

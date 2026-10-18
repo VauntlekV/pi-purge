@@ -1,7 +1,7 @@
 {
   "name": "pi-purge",
-  "version": "0.1.1",
-  "description": "pi extension: /purge toggles a stripped-down system prompt (host identity + docs removed) and injects your own persona file",
+  "version": "0.1.2",
+  "description": "pi extension: switch a session between pi's stock system prompt, a trimmed variant, and your own prompt file - for prompt-engineering experiments",
   "type": "module",
   "license": "MIT",
   "author": "ZiChuanLan",
@@ -19,8 +19,8 @@
     "pi-coding-agent",
     "pi",
     "system-prompt",
-    "persona",
-    "prompt-injection"
+    "prompt-engineering",
+    "prompt-evaluation"
   ],
   "files": [
     "extensions",

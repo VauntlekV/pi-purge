@@ -1,11 +1,12 @@
 /**
- * pi-purge — 破限模式开关
+ * pi-purge — system prompt composition switch
  *
- * 移植自 dsh-purge 的破限机制：宿主身份段不是被"压住"，而是被**清掉**。
- *  dsh 那边：includeHarnessIdentity -> false、personaPrefix/personaSuffix -> ""，
- *            再把 prompt-inject 全文挂到系统提示词头部。
- *  pi 这边：把 pi 的 "You are an expert coding assistant..." 身份句和
- *            "Pi documentation (...)" 段从系统提示词里切除，再把人设挂头部。
+ * 用于提示词工程实验：在「宿主原样」「精简版」「只用自定义文件」三种系统提示词之间切换，
+ * 观察同一问题下模型行为如何变化（指令遵循、提示词注入鲁棒性、人格设定实验）。
+ *
+ *  - replace: 去掉宿主提示词里的助手身份句与内置文档段，保留工具列表、Guidelines、项目上下文
+ *  - append : 只把自定义文件挂到头部，宿主提示词原样保留（对照组）
+ *  - strict : 宿主提示词整段不发送，只留自定义文件 + 工作目录（隔离变量）
  *
  * 关闭时不改动任何提示词、不读盘，pi 与未安装这个扩展时完全一致。
  * 状态存 <agent dir>/pi-purge.json（默认 ~/.pi/agent，可用 PI_CODING_AGENT_DIR 覆写）；
@@ -37,7 +38,8 @@ interface PurgeState {
 
 function loadState(): PurgeState {
 	try {
-		const raw = JSON.parse(readFileSync(CONFIG, "utf8")) as Partial<PurgeState>;
+		// Windows 记事本/Set-Content 可能带 BOM，先剔掉再解析
+		const raw = JSON.parse(readFileSync(CONFIG, "utf8").replace(/^\uFEFF/, "")) as Partial<PurgeState>;
 		return {
 			enabled: raw.enabled === true,
 			source: typeof raw.source === "string" && raw.source.length > 0 ? raw.source : DEFAULT_SOURCE,
@@ -91,13 +93,13 @@ export default function piPurge(pi: ExtensionAPI) {
 	const state = loadState();
 	let body = "";
 	let loadError = "";
-	// 上一轮 replace 的实况，/purge status 用来回答"破限到底生效没有"
+	// 上一轮 replace 的实况，/purge status 用来回答「这一轮到底改了什么」
 	let lastCut = { identity: false, docs: false, at: 0 };
 
 	const reload = (): boolean => {
 		try {
 			if (!existsSync(state.source)) throw new Error(`文件不存在: ${state.source}`);
-			const text = readFileSync(state.source, "utf8").trim();
+			const text = readFileSync(state.source, "utf8").replace(/^\uFEFF/, "").trim();
 			if (text.length === 0) throw new Error(`文件为空: ${state.source}`);
 			body = text;
 			loadError = "";
@@ -131,7 +133,7 @@ export default function piPurge(pi: ExtensionAPI) {
 
 		let host = event.systemPrompt;
 		if (state.mode === "strict") {
-			// 等价 dsh 的 strict baseline：宿主提示词整段丢掉，只留工作目录。
+			// 等价 dsh 的 strict baseline：宿主提示词整段丢掉，只留工作目录，作为隔离变量。
 			// 工具 schema 走 API 的 tools 参数，不依赖这段文字。
 			const cwd = event.systemPromptOptions?.cwd;
 			host = cwd ? `Current working directory: ${String(cwd).replace(/\\/g, "/")}` : "";
@@ -146,7 +148,7 @@ export default function piPurge(pi: ExtensionAPI) {
 	});
 
 	pi.registerCommand("purge", {
-		description: "破限模式开关：清掉宿主身份段并把外挂人设挂到系统提示词头部",
+		description: "系统提示词实验开关：切换宿主提示词与自定义提示词文件（append / replace / strict）",
 		getArgumentCompletions: (prefix: string) =>
 			["on", "off", "status", "reload", "source", "mode"]
 				.filter((value) => value.startsWith(prefix))
@@ -208,7 +210,7 @@ export default function piPurge(pi: ExtensionAPI) {
 				case "mode": {
 					const wanted = arg.toLowerCase();
 					if (wanted !== "replace" && wanted !== "append" && wanted !== "strict") {
-						return notify(`当前模式: ${state.mode}\n用法: /purge mode strict|replace|append\nstrict  = 只发人设 + 工作目录（破限最彻底）\nreplace = 清 pi 身份段与文档段\nappend  = 只把人设挂头部`, "error");
+						return notify(`当前模式: ${state.mode}\n用法: /purge mode strict|replace|append\nstrict  = 只发自定义文件 + 工作目录（变量隔离）\nreplace = 去掉助手身份句与内置文档段\nappend  = 只把自定义文件挂头部（对照组）`, "error");
 					}
 					state.mode = wanted;
 					saveState(state);
