@@ -1,0 +1,53 @@
+{
+  "name": "pi-purge",
+  "version": "0.1.0",
+  "description": "pi extension: /purge toggles a stripped-down system prompt (host identity + docs removed) and injects your own persona file",
+  "type": "module",
+  "license": "MIT",
+  "author": "ZiChuanLan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZiChuanLan/pi-purge.git"
+  },
+  "homepage": "https://github.com/ZiChuanLan/pi-purge#readme",
+  "bugs": {
+    "url": "https://github.com/ZiChuanLan/pi-purge/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi-coding-agent",
+    "pi",
+    "system-prompt",
+    "persona",
+    "prompt-injection"
+  ],
+  "files": [
+    "extensions",
+    "test",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node test/pi-purge.test.mjs"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.80.0 <2"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/pi-purge.ts"
+    ]
+  }
+}
