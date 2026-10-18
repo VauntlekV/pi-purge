@@ -1,6 +1,6 @@
 # pi-purge
 
-[English](README.md) | 中文
+[English](README.md) | [中文](README.zh-CN.md)
 
 A [pi](https://github.com/earendil-works/pi-coding-agent) extension for system-prompt experiments: `/purge` switches which system prompt a session runs with — pi's stock prompt, a trimmed variant, or only your own prompt file.
 
