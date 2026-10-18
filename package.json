@@ -1,6 +1,6 @@
 {
   "name": "pi-purge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "pi extension: /purge toggles a stripped-down system prompt (host identity + docs removed) and injects your own persona file",
   "type": "module",
   "license": "MIT",
