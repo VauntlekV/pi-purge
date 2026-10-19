@@ -125,3 +125,7 @@ Also prohibited: unauthorized penetration or attack against public or private in
 ## License
 
 MIT
+
+---
+
+感谢 [LINUX DO](https://linux.do) 社区
