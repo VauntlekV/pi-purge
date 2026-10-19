@@ -20,9 +20,7 @@ pi install npm:pi-purge
 /purge
 ```
 
-就这一步。包内自带默认人设，不需要准备任何提示词文件。
-
-想换成自己的提示词：
+就这一步。包内自带一段简短示例提示词，装完不必准备任何文件。想换成自己的提示词：
 
 ```text
 /purge source C:/prompts/my-instructions.md
@@ -40,7 +38,7 @@ pi install npm:pi-purge
 | `/purge on` / `off` | 显式开关 |
 | `/purge status` | 当前模式、提示词来源、已加载字符数，以及上一轮实际改了什么 |
 | `/purge mode append\|replace\|strict` | 切换组合方式（默认 `strict`） |
-| `/purge source <路径\|embedded>` | 换提示词文件，或回到内置人设；切换失败会自动回滚 |
+| `/purge source <路径\|embedded>` | 换提示词文件，或回到内置示例；切换失败会自动回滚 |
 | `/purge reload` | 改完外部文件后重新读取 |
 
 ## 模式
@@ -59,7 +57,8 @@ pi install npm:pi-purge
 
 - 作用范围是**会话**。每次 `session_start`（启动 / 新建 / `resume` / 重载）都从**关闭**开始；退出 pi 一定回到原始提示词。
 - **不写任何文件**：没有状态文件、没有缓存、没有标记。两个 pi 进程互不影响。
-- 默认提示词是打包在 `extensions/pi-purge.ts` 里的内置人设；`/purge source <路径>` 换成自己的文件，`/purge source embedded` 切回来。
+- 默认提示词是 `extensions/pi-purge.ts` 里的一小段示例；`/purge source <路径>` 换成自己的文件，`/purge source embedded` 切回来。
+- 内置文本故意写得很短：发布到包仓库的内容会被扫描滥用性提示词，完整的人设文本过不了扫描；把自己的提示词放在本地用 `/purge source` 引用。
 - 默认模式 `strict`。
 
 ## 从 0.1.x 升级

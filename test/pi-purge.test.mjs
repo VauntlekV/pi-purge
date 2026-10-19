@@ -78,7 +78,7 @@ try {
 	await cmd.handler("on", ctx);
 	assert.equal(statuses.at(-1), "PURGE ON", "footer 显示 PURGE ON");
 	const sp = (await inject()).systemPrompt;
-	assert.ok(sp.length > 5000, `内嵌人设已注入（${sp.length} 字符）`);
+	assert.ok(sp.includes("helpful assistant"), "内嵌人设已注入");
 	assert.ok(sp.endsWith("Current working directory: H:/WorkSpace"), "strict 保留工作目录");
 	assert.ok(!sp.includes("You are an expert coding assistant"), "strict 丢掉宿主身份句");
 	assert.ok(!sp.includes("Available tools:"), "strict 丢掉宿主结构");
@@ -124,7 +124,7 @@ try {
 	assert.equal(notes.at(-1)[0], "error", "不存在的源报 error");
 	assert.match(lastNote(), /文件不存在/, "错误信息带具体原因");
 	const afterFail = (await inject()).systemPrompt;
-	assert.ok(afterFail.length > 5000, "回滚后仍注入完整内嵌人设");
+	assert.ok(afterFail.includes("helpful assistant"), "回滚后仍注入完整内嵌人设");
 
 	// 6. 显式切回内嵌
 	await cmd.handler("source embedded", ctx);

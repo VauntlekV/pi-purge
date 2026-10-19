@@ -20,9 +20,7 @@ Then, inside a session:
 /purge
 ```
 
-That is all. A default persona ships inside the package; no prompt file is needed.
-
-To use your own prompt instead:
+That is all. A short example prompt ships inside the package, so a fresh install works with no extra files. To run your own instructions instead:
 
 ```text
 /purge source C:/prompts/my-instructions.md
@@ -40,7 +38,7 @@ To use your own prompt instead:
 | `/purge on` / `off` | Enable or disable the rewrite |
 | `/purge status` | Mode, prompt source, loaded size, and what the previous turn actually changed |
 | `/purge mode append\|replace\|strict` | Switch composition mode (default `strict`) |
-| `/purge source <path\|embedded>` | Change the prompt file, or go back to the bundled persona; a failed switch rolls back |
+| `/purge source <path\|embedded>` | Change the prompt file, or go back to the bundled example; a failed switch rolls back |
 | `/purge reload` | Re-read an external prompt file after editing it |
 
 ## Modes
@@ -59,7 +57,8 @@ Tool schemas are passed through the API `tools` parameter rather than the system
 
 - Scope is the session. Every `session_start` — startup, `new`, `resume`, `reload` — begins **disabled**. Quitting pi always returns to stock behavior.
 - Nothing is written to disk: there is no state file, no cache, no marker. Two pi processes cannot affect each other.
-- The default prompt is the persona bundled inside `extensions/pi-purge.ts`. `/purge source <path>` points at your own file; `/purge source embedded` comes back.
+- The default prompt is the short example bundled inside `extensions/pi-purge.ts`. `/purge source <path>` points at your own file; `/purge source embedded` comes back.
+- The bundled text is deliberately minimal. Published packages are scanned for abusive prompt content, so a full custom persona does not survive publishing; keep your own prompt on disk and reference it with `/purge source`.
 - The default mode is `strict`.
 
 ## Upgrading from 0.1.x
