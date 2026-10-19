@@ -86,7 +86,7 @@ npm test   # 9 组断言，跑在临时 agent 目录里，并断言全程没有�
 
 ## 致谢与署名
 
-本项目的机制移植自 [YuJunZhiXue/dsh-purge](https://github.com/YuJunZhiXue/dsh-purge)：把宿主身份段**清掉**（而非压住）的破限思路、三档组合方式与默认提示词，均出自该项目。按原作者要求在此署名并标明来源仓库。
+本项目的机制移植自 [YuJunZhiXue/dsh-purge](https://github.com/YuJunZhiXue/dsh-purge)：把宿主身份段**清掉**（而非压住）的思路、三档组合方式与默认提示词，均出自该项目。按原作者要求在此署名并标明来源仓库。
 
 ## 免责与合规声明
 
