@@ -11,7 +11,8 @@
 ## 安装
 
 ```bash
-pi install npm:pi-purge
+完整带提示词： pi install git:github.com/ZiChuanLan/pi-purge@ffafeb9
+自定义提示词： pi install npm:pi-purge
 ```
 
 然后在会话里：
