@@ -131,3 +131,7 @@ npm test   # 9 组断言，跑在临时 agent 目录里，并断言全程没有�
 ## 许可
 
 MIT
+
+---
+
+感谢 [LINUX DO](https://linux.do) 社区
